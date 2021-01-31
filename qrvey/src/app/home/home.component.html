@@ -1,20 +1,31 @@
 <h1 style="text-align: center">Lista de países</h1>
-<div class="container">
+<input type="text" [(ngModel)]="searchText" (keyup)="searchCountries()">  <button type="button" (click)="searchCountries()">Buscar</button>
+<div class="container" *ngIf="!search">
     <div class="row">
         <div *ngFor="let regions of world; let i = index" class="col">
             <h3>{{regions.region}}</h3>
             <ul>
                 <li *ngFor="let country of regions.countries" (click)="openModal(template, country)">
-                    <img [src]="country.flag" width="20"> {{country.name}}
+                    <img [src]="country.flag" width="20"> {{country.name}} <i *ngIf="favorites.indexOf(country.name) != -1 && favorites.length > 0" class="bi bi-star-fill star yellow"></i>
                 </li>
             </ul>
         </div>
     </div>
 </div>
 
+<div class="container" *ngIf="search">
+    <div class="row">
+        <ul>
+            <li *ngFor="let country of countriesFiltered" (click)="openModal(template, country)">
+                <img [src]="country.flag" width="20"> {{country.name}} <i *ngIf="favorites.indexOf(country.name) != -1 && favorites.length > 0" class="bi bi-star-fill star yellow"></i>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <ng-template #template>
     <div class="modal-header">
-        <h2 class="modal-title pull-let">{{countryName}}</h2>
+        <h2 class="modal-title pull-let">{{countryName}} <i *ngIf="favorites.indexOf(countryName) != -1 && favorites.length > 0" (click)="removeFavorite(countryName)" class="bi bi-star-fill star yellow"></i> <i *ngIf="favorites.indexOf(countryName) == -1 || favorites.length == 0" (click)="addFavorite(countryName)" class="bi bi-star star"></i></h2>
         <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
         </button>

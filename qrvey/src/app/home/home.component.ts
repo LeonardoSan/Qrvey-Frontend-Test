@@ -12,6 +12,8 @@ export class HomeComponent implements OnInit {
 
   world: any[] = [];
   regions: any[] = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
+  favorites: any[] = JSON.parse(localStorage.getItem('favorites'));;
+  countriesFiltered: any[] = [];
   
   countryName: string = '';
   regionName: string = '';
@@ -21,6 +23,8 @@ export class HomeComponent implements OnInit {
   language: string = '';
   borderCountries: string = '';
   flag: string = '';
+  searchText: string = '';
+  search: boolean = false;
 
   modalRef: BsModalRef;
 
@@ -133,6 +137,43 @@ export class HomeComponent implements OnInit {
     
   }
 
-  
+  addFavorite(countryName: string){
+    console.log('add favorite: ', countryName);
+    this.favorites.push(countryName);
+    console.log(this.favorites);
+    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+  }
+
+  removeFavorite(countryName: string){
+    console.log('remove favorite: ', countryName);
+    let index = this.favorites.indexOf(countryName);
+    if(index > -1){
+      this.favorites.splice(index, 1);
+    }
+    console.log(this.favorites);
+    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+  }
+
+  searchCountries(){
+    if(this.searchText == ''){
+      this.search = false;
+    }
+    else{
+      this.countriesFiltered = [];
+      console.log('search: ', this.searchText);
+      this.search = true;
+      let text = this.searchText.toLowerCase();
+      this.world.forEach(region => {
+        region.countries.forEach(countries => {
+          let countryName = countries.name.toLowerCase();
+          if(countryName.indexOf(text) != -1){
+            this.countriesFiltered.push(countries);
+          }
+        });
+      });
+
+      console.log('paises filtrados: ', this.countriesFiltered);
+    }
+  }
 
 }
