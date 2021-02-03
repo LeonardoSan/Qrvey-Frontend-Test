@@ -1,5 +1,21 @@
-<h1 style="text-align: center">Lista de países</h1>
-<input type="text" [(ngModel)]="searchText" (keyup)="searchCountries()">  <button type="button" (click)="searchCountries()">Buscar</button>
+<header class="container">
+    <div class="row">
+        <div class="col col-6">
+            <h1>Find any <span>country</span><br> in the world.</h1>
+            <input class="form-control" type="text" [(ngModel)]="searchText" (keyup)="searchCountries()">
+            <select class="form-control" [(ngModel)]="listSearch" (change)="filterCountries()">
+                <option value="all">Show all</option>
+                <option value="favorites">Favorites</option>
+                <option *ngFor="let region of regions">{{region}}</option>
+            </select>
+            <button type="button" class="search" (click)="searchCountries()"><i class="bi bi-search"></i></button>
+        </div>
+        <div class="col col-6">
+            <img class="planet" src="../../assets/planeta.jpg" alt="Earth">
+        </div>
+    </div>
+</header>
+  
 <div class="container" *ngIf="!search">
     <div class="row">
         <div *ngFor="let regions of world; let i = index" class="col">
@@ -20,24 +36,25 @@
                 <img [src]="country.flag" width="20"> {{country.name}} <i *ngIf="favorites.indexOf(country.name) != -1 && favorites.length > 0" class="bi bi-star-fill star yellow"></i>
             </li>
         </ul>
+        <p *ngIf="countriesFiltered.length == 0">No results found</p>
     </div>
 </div>
 
 <ng-template #template>
     <div class="modal-header">
-        <h2 class="modal-title pull-let">{{countryName}} <i *ngIf="favorites.indexOf(countryName) != -1 && favorites.length > 0" (click)="removeFavorite(countryName)" class="bi bi-star-fill star yellow"></i> <i *ngIf="favorites.indexOf(countryName) == -1 || favorites.length == 0" (click)="addFavorite(countryName)" class="bi bi-star star"></i></h2>
+        <h2 class="modal-title pull-let">{{countryName}} <i *ngIf="favorites.indexOf(countryName) != -1 && favorites.length > 0" (click)="removeFavorite(countryName)" class="bi bi-star-fill star2 yellow"></i> <i *ngIf="favorites.indexOf(countryName) == -1 || favorites.length == 0" (click)="addFavorite(countryName)" class="bi bi-star star2"></i></h2>
         <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        Region: {{regionName}}<br>
-        Population: {{population}}<br>
-        Capital: {{capital}}<br>
-        Currency: {{currency}}<br>
-        Language: {{language}}<br>
-        Border Countries: {{borderCountries}}<br>
-        Flag: <br>
-        <img [src]="flag" width="200" style="border: 1px solid #cecece;">
+        <strong>Region:</strong> {{regionName}}<br>
+        <strong>Population:</strong> {{population}}<br>
+        <strong>Capital:</strong> {{capital}}<br>
+        <strong>Currency:</strong> {{currency}}<br>
+        <strong>Language:</strong> {{language}}<br>
+        <strong>Border Countries:</strong> {{borderCountries}}<br>
+        <strong>Flag:</strong> <br>
+        <img [src]="flag" width="200" class="flag">
     </div>
 </ng-template>

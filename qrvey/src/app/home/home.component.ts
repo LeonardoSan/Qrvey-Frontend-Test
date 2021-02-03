@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
 
   world: any[] = [];
   regions: any[] = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
-  favorites: any[] = JSON.parse(localStorage.getItem('favorites'));;
+  favorites: any[] = [];
   countriesFiltered: any[] = [];
   
   countryName: string = '';
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   flag: string = '';
   searchText: string = '';
   search: boolean = false;
+  listSearch: string = 'all';
 
   modalRef: BsModalRef;
 
@@ -34,6 +35,12 @@ export class HomeComponent implements OnInit {
     console.log('Hola again');
 
     //this.getAllCountries();
+
+    this.favorites = JSON.parse(localStorage.getItem('favorites'));
+    if(this.favorites == null){
+      this.favorites = [];
+    }
+    console.log('favorites', this.favorites);
 
     this.regions.forEach(region => {
       this.countriesService.GetCountriesByRegion(region).subscribe(
@@ -171,8 +178,39 @@ export class HomeComponent implements OnInit {
           }
         });
       });
-
       console.log('paises filtrados: ', this.countriesFiltered);
+    }
+  }
+
+  filterCountries(){
+    console.log('option filter selected: ', this.listSearch);
+    this.searchText = '';
+
+    if(this.listSearch == '' || this.listSearch == 'all'){
+      this.search = false;
+    }
+    else if(this.listSearch == 'favorites'){
+      this.search = true;
+      this.countriesFiltered = [];
+      this.world.forEach(region => {
+        region.countries.forEach(countries => {
+          this.favorites.forEach(fav => {
+            if(countries.name == fav){
+              this.countriesFiltered.push(countries);
+            }
+          });
+        });
+      });
+      console.log('paises filtrados: ', this.countriesFiltered);
+    }
+    else{
+      this.search = true;
+      this.countriesFiltered = [];
+      this.world.forEach(region => {
+        if(region.region == this.listSearch){
+          this.countriesFiltered = region.countries;
+        }
+      });
     }
   }
 
